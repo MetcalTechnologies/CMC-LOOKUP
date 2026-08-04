@@ -206,6 +206,13 @@ if(a[8]){e.fText=S256F[a[8]];if(a[7]){e.fLo=a[6];e.fHi=a[7];}}DATA.push(e);}})()
 if(e.instrument==='Thermo-hygro Device / Data Logger'&&e.quantity==='rh'){
 if(e.point&&e.sub.indexOf('Fixed Point')>=0){e.subAsStated=e.subAsStated?e.subAsStated+' \u2014 fixed point':'Fixed point';}
 e.sub='Relative Humidity at 25 \u00B0C';}}})();
+// Short inline note under the lookup controls explaining the two buttons.
+(function(){var n=document.getElementById('nominal');if(!n||document.getElementById('modeHint'))return;
+var row=n.closest('.row');if(!row)return;
+var p=document.createElement('p');p.id='modeHint';
+p.style.cssText='font-size:12px;color:var(--muted);line-height:1.55;margin:12px 0 0;';
+p.innerHTML='<strong style="color:var(--text)">Find CMC</strong> \u2014 the uncertainty at one nominal; lists only the accredited ranges that cover it, smallest CMC first. &nbsp;\u00b7&nbsp; <strong style="color:var(--text)">Show all</strong> \u2014 every accredited range in the selected scope, ignoring the nominal.';
+row.parentNode.insertBefore(p,row.nextSibling);})();
 
 
 function fmt(v){
