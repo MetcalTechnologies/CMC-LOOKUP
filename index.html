@@ -194,6 +194,9 @@ var cm=c[0]===0?{type:'fixed',value:c[1],unit:c[2]}:{type:'comp',rel:c[1],relLab
 var e={field:'Electrical',quantity:s[3],location:s[0],samm:'256',instrument:s[1],sub:s[2],
 subAsStated:null,point:!!a[9],loPa:a[3],hiPa:a[4],rangeText:S256T[a[2]],cmc:cm,remarks:S256R[a[1]]};
 if(a[8]){e.fText=S256F[a[8]];if(a[7]){e.fLo=a[6];e.fHi=a[7];}}DATA.push(e);}})();
+// SAMM 256 Humidity Enclosure lists two measured quantities in one cell (%rh and degC).
+// Split the sub so both are reachable - qtyOf() allows only one quantity per (field,instrument,sub).
+(function(){for(var i=0;i<DATA.length;i++){var e=DATA[i];if(e.instrument==='Humidity Enclosure'&&e.sub==='All'){e.sub=(e.quantity==='rh')?'Humidity':'Temperature';}}})();
 
 
 function fmt(v){
