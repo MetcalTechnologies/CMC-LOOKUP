@@ -216,6 +216,10 @@ row.parentNode.insertBefore(p,row.nextSibling);})();
 // CMC is an uncertainty: report to at most two significant figures (JCGM 100 / GUM 7.2.6).
 // Unit conversion otherwise shows spurious digits, e.g. 0.049 psi -> 0.003378 bar instead of 0.0034 bar.
 // fmt() is used only for the converted CMC value, not for ranges or the entered nominal.
+// SAMM 912 labels this scope only 'SITE LOCATION 2 (BRANCH)' and never names the town.
+// It is the Johor branch: p28 duplicates the Johor branch pressure table (p26) row for row, and
+// Melaka (Branch 1) is accredited for Dimensional only, with no pressure or temperature scope.
+(function(){for(var i=0;i<DATA.length;i++){if(DATA[i].location==='Site Calibration \u2014 Location 2'){DATA[i].location='Site Calibration \u2014 Johor';}}})();
 fmt=function(v){
  if(v===0)return'0';
  var r=Number(v.toPrecision(2)),a=Math.abs(r);
