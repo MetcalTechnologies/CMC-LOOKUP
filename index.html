@@ -229,6 +229,18 @@ if(e.samm==='256'&&e.field==='Electrical'&&e.instrument==='Measuring Instrument'
 var c={};for(var k in e)c[k]=e[k];c.instrument='Insulation Tester';c.sub='Insulation Resistance';
 c.subAsStated=e.sub;add.push(c);}}
 for(var j=0;j<add.length;j++)DATA.push(add[j]);})();
+// SAMM 912 p15 Industrial Weights is tabulated at discrete nominal weights, but its remark reads
+// 'Intermediate values can be calibrated with an uncertainty equal to that of the NEXT HIGHER nominal
+// value' - not interpolated between the next higher and lower, which is the rule everywhere else.
+// Treating it like the others offered the next LOWER point too: 40 kg returned the 25 kg row at
+// 0.1 g alongside the correct 250 kg row at 20 g, understating the uncertainty 200-fold.
+// Give each tabulated weight the span from the previous weight up to itself, so the next-higher
+// rule falls out of ordinary range matching.
+(function(){var W=DATA.filter(function(e){return e.field==='Mass'&&e.instrument==='Industrial Weight'
+&&/next higher nominal value/i.test(e.remarks||'')&&e.point===true;});
+W.sort(function(a,b){return a.hiPa-b.hiPa;});var prev=0;
+for(var i=0;i<W.length;i++){var e=W[i],pt=e.hiPa;
+e.loPa=(prev===0)?0:prev*(1+1e-12);e.hiPa=pt;e.point=false;prev=pt;}})();
 fmt=function(v){
  if(v===0)return'0';
  var r=Number(v.toPrecision(2)),a=Math.abs(r);
