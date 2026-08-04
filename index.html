@@ -197,6 +197,15 @@ if(a[8]){e.fText=S256F[a[8]];if(a[7]){e.fLo=a[6];e.fHi=a[7];}}DATA.push(e);}})()
 // SAMM 256 Humidity Enclosure lists two measured quantities in one cell (%rh and degC).
 // Split the sub so both are reachable - qtyOf() allows only one quantity per (field,instrument,sub).
 (function(){for(var i=0;i<DATA.length;i++){var e=DATA[i];if(e.instrument==='Humidity Enclosure'&&e.sub==='All'){e.sub=(e.quantity==='rh')?'Humidity':'Temperature';}}})();
+// Thermo-hygro Device / Data Logger: SAMM 912 and SAMM 256 label the same relative-humidity
+// scope three different ways ('@ 25 C', '(@ 25 C)', '(Fixed Point) at 25 C'). Merge them into one
+// Type so the dropdown offers just Air Temperature and Relative Humidity. The fixed-point rows keep
+// their identity via subAsStated; lookup() still falls back to nearest tabulated points when no
+// continuous range covers the nominal.
+(function(){for(var i=0;i<DATA.length;i++){var e=DATA[i];
+if(e.instrument==='Thermo-hygro Device / Data Logger'&&e.quantity==='rh'){
+if(e.point&&e.sub.indexOf('Fixed Point')>=0){e.subAsStated=e.subAsStated?e.subAsStated+' \u2014 fixed point':'Fixed point';}
+e.sub='Relative Humidity at 25 \u00B0C';}}})();
 
 
 function fmt(v){
