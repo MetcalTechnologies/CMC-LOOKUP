@@ -220,6 +220,15 @@ row.parentNode.insertBefore(p,row.nextSibling);})();
 // It is the Johor branch: p28 duplicates the Johor branch pressure table (p26) row for row, and
 // Melaka (Branch 1) is accredited for Dimensional only, with no pressure or temperature scope.
 (function(){for(var i=0;i<DATA.length;i++){if(DATA[i].location==='Site Calibration \u2014 Location 2'){DATA[i].location='Site Calibration \u2014 Johor';}}})();
+// SAMM 256 p28/p41 accredit one combined resistance scope whose instrument list explicitly includes
+// 'Insulation Meter', reaching 1111 GOhm. SAMM 912 instead has a separate 'Insulation Tester' scope that
+// stops at 1 GOhm. Without this, an insulation-tester lookup above 1 GOhm wrongly reports nothing available.
+// Mirror the SAMM 256 rows under Insulation Tester, keeping the schedule's own wording in subAsStated.
+(function(){var add=[];for(var i=0;i<DATA.length;i++){var e=DATA[i];
+if(e.samm==='256'&&e.field==='Electrical'&&e.instrument==='Measuring Instrument'&&e.sub.indexOf('Resistance (Resistance Meter')===0){
+var c={};for(var k in e)c[k]=e[k];c.instrument='Insulation Tester';c.sub='Insulation Resistance';
+c.subAsStated=e.sub;add.push(c);}}
+for(var j=0;j<add.length;j++)DATA.push(add[j]);})();
 fmt=function(v){
  if(v===0)return'0';
  var r=Number(v.toPrecision(2)),a=Math.abs(r);
