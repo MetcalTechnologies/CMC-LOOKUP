@@ -213,6 +213,16 @@ var p=document.createElement('p');p.id='modeHint';
 p.style.cssText='font-size:12px;color:var(--muted);line-height:1.55;margin:12px 0 0;';
 p.innerHTML='<strong style="color:var(--text)">Find CMC</strong> \u2014 the uncertainty at one nominal; lists only the accredited ranges that cover it, smallest CMC first. &nbsp;\u00b7&nbsp; <strong style="color:var(--text)">Show all</strong> \u2014 every accredited range in the selected scope, ignoring the nominal.';
 row.parentNode.insertBefore(p,row.nextSibling);})();
+// CMC is an uncertainty: report to at most two significant figures (JCGM 100 / GUM 7.2.6).
+// Unit conversion otherwise shows spurious digits, e.g. 0.049 psi -> 0.003378 bar instead of 0.0034 bar.
+// fmt() is used only for the converted CMC value, not for ranges or the entered nominal.
+fmt=function(v){
+ if(v===0)return'0';
+ var r=Number(v.toPrecision(2)),a=Math.abs(r);
+ if(a<1e-4||a>=1e7)return r.toExponential(1);
+ var dec=Math.max(0,1-Math.floor(Math.log10(a)));
+ return r.toFixed(dec).replace(/(\.\d*?)0+$/,'$1').replace(/\.$/,'');
+};
 
 
 function fmt(v){
